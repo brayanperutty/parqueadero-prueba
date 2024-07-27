@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -15,18 +18,20 @@ public class IngresoVehiculo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_ingreso")
+    @Column(name = "id_ingreso", nullable = false)
     private Integer idIngreso;
 
-    @Column(name = "id_parqueadero")
-    private Integer idParqueadero;
+    @ManyToOne
+    @JoinColumn(name = "id_parqueadero", nullable = false)
+    private Parqueadero parqueadero;
 
-    @Column(name = "id_vehiculo")
-    private Integer idVehiculo;
+    @ManyToOne
+    @JoinColumn(name = "placa_vehiculo", nullable = false)
+    private Vehiculo vehiculo;
 
-    @Column(name = "fecha_ingreso")
+    @Column(name = "fecha_ingreso", nullable = false)
     private String fechaIngreso;
 
-    @Column(name = "hora_ingreso")
+    @Column(name = "hora_ingreso", nullable = false)
     private String horaIngreso;
 }

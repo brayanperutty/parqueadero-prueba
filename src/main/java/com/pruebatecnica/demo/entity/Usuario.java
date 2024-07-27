@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.util.List;
+import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -15,15 +17,27 @@ import java.util.List;
 public class Usuario {
 
     @Id
+    @Column(nullable = false)
     private String cedula;
 
-    @Column(name = "nombre_completo")
+    @Column(name = "nombre_completo", nullable = false)
     private String nombreCompleto;
-    private String correo;
-    private String pass;
-    @Column(name = "id_rol")
-    private Integer idRol;
 
-    @ManyToMany(mappedBy = "parqueadero")
-    private List<Parqueadero> parqueadero;
+    @Column(nullable = false)
+    private String correo;
+
+    @Column(nullable = false)
+    private String pass;
+
+    @ManyToOne
+    @JoinColumn(name = "id_rol", nullable = false)
+    private Rol idRol;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "usuario_parqueadero",
+            joinColumns = @JoinColumn(name = "usuario_cedula"),
+            inverseJoinColumns = @JoinColumn(name = "parqueadero_id")
+    )
+    private Set<Parqueadero> parqueaderos = new HashSet<>();
 }

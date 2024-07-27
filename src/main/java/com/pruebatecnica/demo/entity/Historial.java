@@ -2,30 +2,41 @@ package com.pruebatecnica.demo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Data
 @Table(name = "historial")
-@AllArgsConstructor
-@NoArgsConstructor
 public class Historial {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_historial")
+    @Column(name = "id_historial", nullable = false)
     private Integer idHistorial;
 
-    @Column(name = "id_ingreso")
-    private Integer idIngreso;
+    @ManyToOne
+    @JoinColumn(name = "id_parqueadero", nullable = false)
+    private Parqueadero parqueadero;
 
-    @Column(name = "fecha_salida")
+    @ManyToOne
+    @JoinColumn(name = "placa_vehiculo", nullable = false)
+    private Vehiculo vehiculo;
+
+    @Column(name = "fecha_salida", nullable = false)
     private String fechaSalida;
 
-    @Column(name = "hora_salida")
+    @Column(name = "hora_salida", nullable = false)
     private String horaSalida;
 
+    @Column(name = "hora_ingreso", nullable = false)
+    private String horaIngreso;
+
+    @Column(name = "fecha_ingreso", nullable = false)
+    private String fechaIngreso;
+
+    @Column(nullable = false)
     private Integer cobro;
+
+    public Historial (){}
 }
