@@ -1,6 +1,7 @@
 package com.pruebatecnica.demo.controller;
 
 import com.pruebatecnica.demo.auth.RegisterSocioRequest;
+import com.pruebatecnica.demo.entity.Parqueadero;
 import com.pruebatecnica.demo.entity.Usuario;
 import com.pruebatecnica.demo.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/usuario")
@@ -76,6 +78,12 @@ public class UsuarioController {
         }else{
             return ResponseEntity.badRequest().body(response);
         }
+    }
+
+    @GetMapping(value = "parqueaderos/{cedula}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SOCIO')")
+    public Set<Parqueadero> listParqueaderosBySocio(@PathVariable String cedula){
+        return usuarioService.listParqueaderoBySocio(cedula);
     }
 
 }

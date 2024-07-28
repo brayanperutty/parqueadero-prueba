@@ -1,5 +1,6 @@
 package com.pruebatecnica.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,9 +36,11 @@ public class Parqueadero {
     private Integer costoHoraMoto;
 
     @ManyToMany(mappedBy = "parqueaderos", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Usuario> socios = new HashSet<>();
 
     @OneToMany(mappedBy = "parqueadero", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<IngresoVehiculo> ingresos = new HashSet<>();
 
     @Override

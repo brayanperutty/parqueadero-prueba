@@ -1,5 +1,6 @@
 package com.pruebatecnica.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,9 +44,11 @@ public class Usuario implements UserDetails{
             joinColumns = @JoinColumn(name = "usuario_cedula"),
             inverseJoinColumns = @JoinColumn(name = "parqueadero_id")
     )
+    @JsonIgnore
     private Set<Parqueadero> parqueaderos = new HashSet<>();
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Token> tokens = new HashSet<>();
 
     @Override

@@ -27,8 +27,12 @@ public class IngresoVehiculoService {
         if (registerIngresoRequest.getIdParqueadero().toString().trim().isEmpty()) {
             return "El campo de idParqueadero no debe ser vacío o nulo";
         } else if (registerIngresoRequest.getPlacaVehiculo().trim().isEmpty()) {
-            return "El campo de placa_vehiculo no debe ser vacío o nulo";
-        } else if (registerIngresoRequest.getMarca().trim().isEmpty()) {
+            return "El campo de placaVehiculo no debe ser vacío o nulo";
+        }else if(registerIngresoRequest.getPlacaVehiculo().length() != 6){
+            return "El campo de placaVehiculo solo debe tener 6 caracteres";
+        }else if(!registerIngresoRequest.getPlacaVehiculo().matches("^[A-Za-z0-9]*$")){
+            return "La placa del vehículo no debe contener caracteres especiales ni la letra ñ";
+        }else if (registerIngresoRequest.getMarca().trim().isEmpty()) {
             return "El campo de marca de vehículo no debe ser vacío o nulo";
         } else if (registerIngresoRequest.getModelo().trim().isEmpty()) {
             return "El campo de modelo de vehículo no debe ser vacío o nulo";

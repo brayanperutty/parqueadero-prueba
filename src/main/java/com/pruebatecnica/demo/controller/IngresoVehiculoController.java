@@ -28,7 +28,7 @@ public class IngresoVehiculoController {
     public ResponseEntity<?> createIngresoVehiculo(@RequestBody RegisterIngresoRequest registerIngresoRequest){
         response.clear();
         String mensaje = ingresoVehiculoService.createIngresoVehiculo(registerIngresoRequest);
-        if(mensaje.startsWith("El") || mensaje.startsWith("No")){
+        if(mensaje.startsWith("El") || mensaje.startsWith("No") || mensaje.startsWith("La")){
             response.put("mensaje", mensaje);
             return ResponseEntity.badRequest().body(response);
         }else{

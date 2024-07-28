@@ -1,11 +1,15 @@
 package com.pruebatecnica.demo.service;
 
 import com.pruebatecnica.demo.entity.Parqueadero;
+import com.pruebatecnica.demo.entity.Usuario;
+import com.pruebatecnica.demo.entity.Vehiculo;
 import com.pruebatecnica.demo.repository.ParqueaderoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor

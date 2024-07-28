@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -90,6 +91,15 @@ public class UsuarioService {
         }else{
             return "Parqueadero o socio no encontrado";
         }
+    }
+
+    public Set<Parqueadero> listParqueaderoBySocio(String cedula){
+        Optional<Usuario> usuario = usuarioRepository.findById(cedula);
+
+        if(usuario.isPresent()){
+            return usuario.get().getParqueaderos();
+        }
+        return null;
     }
 
 }
