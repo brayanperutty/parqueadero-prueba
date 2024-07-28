@@ -37,7 +37,10 @@ public class SecurityConfig {
                         authRequest
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers( "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/usuario/**").permitAll()
+                                .requestMatchers("/usuario/**").permitAll()
+                                .requestMatchers("/parqueadero/**").permitAll()
+                                .requestMatchers("/vehiculo/**").permitAll()
+                                .requestMatchers("/ingreso/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager ->

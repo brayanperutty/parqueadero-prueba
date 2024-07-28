@@ -1,6 +1,7 @@
 package com.pruebatecnica.demo.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.Set;
 @Table(name = "ingreso_vehiculo")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class IngresoVehiculo {
 
     @Id

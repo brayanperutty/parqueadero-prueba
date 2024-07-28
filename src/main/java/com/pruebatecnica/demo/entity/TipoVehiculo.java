@@ -1,6 +1,7 @@
 package com.pruebatecnica.demo.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.Set;
 @Table(name = "tipo_vehiculo")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class TipoVehiculo {
 
     @Id
@@ -23,4 +25,7 @@ public class TipoVehiculo {
 
     @Column(nullable = false)
     private String tipo;
+
+    @OneToMany(mappedBy = "tipo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Vehiculo> vehiculos = new HashSet<>();
 }

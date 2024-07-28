@@ -2,7 +2,9 @@ package com.pruebatecnica.demo.service;
 
 import com.pruebatecnica.demo.auth.AuthService;
 import com.pruebatecnica.demo.auth.RegisterSocioRequest;
+import com.pruebatecnica.demo.entity.Parqueadero;
 import com.pruebatecnica.demo.entity.Usuario;
+import com.pruebatecnica.demo.repository.ParqueaderoRepository;
 import com.pruebatecnica.demo.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.Optional;
 public class UsuarioService {
 
     public final UsuarioRepository usuarioRepository;
+    private final ParqueaderoRepository parqueaderoRepository;
     private final AuthService authService;
 
     public Optional<Usuario> getUsuario(String cedula){
@@ -67,6 +70,26 @@ public class UsuarioService {
 
     public List<Usuario> listUsuarios(){
         return usuarioRepository.findAll();
+    }
+
+    public String asignarParqueadero(String cedula, Integer idParqueadero){
+        Optional<Usuario> usuario = usuarioRepository.findById(cedula);
+        Optional<Parqueadero> parqueadero = parqueaderoRepository.findById(idParqueadero);
+
+        if(usuario.isPresent() && parqueadero.isPresent()){
+            Usuario u = usuario.get();
+            Parqueadero p = parqueadero.get();
+
+            u.getParqueaderos().add(p);
+            p.getSocios().add(u);
+
+            usuarioRepository.save(u);
+            parqueaderoRepository.save(p);
+
+            return "Socio asignado exitosamente";
+        }else{
+            return "Parqueadero o socio no encontrado";
+        }
     }
 
 }

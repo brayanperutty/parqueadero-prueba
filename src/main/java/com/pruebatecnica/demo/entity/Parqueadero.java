@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -38,4 +39,17 @@ public class Parqueadero {
 
     @OneToMany(mappedBy = "parqueadero", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<IngresoVehiculo> ingresos = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Parqueadero that = (Parqueadero) o;
+        return Objects.equals(idParqueadero, that.idParqueadero);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idParqueadero);
+    }
 }

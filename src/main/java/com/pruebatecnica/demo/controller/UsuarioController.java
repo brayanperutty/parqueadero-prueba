@@ -65,4 +65,17 @@ public class UsuarioController {
         return usuarioService.listUsuarios();
     }
 
+    @PostMapping(value = "asignar/{cedula}/{idParqueadero}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> asignarSocioToParqueadero(@PathVariable String cedula, @PathVariable Integer idParqueadero){
+        response.clear();
+        String mensaje = usuarioService.asignarParqueadero(cedula,idParqueadero);
+        response.put("mensaje", mensaje);
+        if(mensaje.startsWith("Socio")){
+            return ResponseEntity.ok(response);
+        }else{
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
 }

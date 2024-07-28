@@ -41,6 +41,8 @@ public class AuthService {
 
         return AuthResponse.builder()
                 .token(token)
+                .nombreUsuario(user.getNombreCompleto())
+                .cedula(user.getCedula())
                 .build();
     }
 
