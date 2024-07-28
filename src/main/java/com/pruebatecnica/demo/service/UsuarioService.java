@@ -2,21 +2,13 @@ package com.pruebatecnica.demo.service;
 
 import com.pruebatecnica.demo.auth.AuthService;
 import com.pruebatecnica.demo.auth.RegisterSocioRequest;
-import com.pruebatecnica.demo.entity.Token;
 import com.pruebatecnica.demo.entity.Usuario;
-import com.pruebatecnica.demo.repository.TokenRepository;
 import com.pruebatecnica.demo.repository.UsuarioRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +17,16 @@ public class UsuarioService {
     public final UsuarioRepository usuarioRepository;
     private final AuthService authService;
 
-    public String crearSocio(RegisterSocioRequest socio){
+    public Optional<Usuario> getUsuario(String cedula){
+        return usuarioRepository.findById(cedula);
+    }
+
+    public String createSocio(RegisterSocioRequest socio){
         if(socio.getCedula().length() < 6 || socio.getCedula().length() > 10){
             return "La cédula no debe tener menos de 6 dígitos o más de 10";
-        }else if(!socio.getCedula().matches("^[0-9]+$") || socio.getCedula() == null || socio.getCedula().trim().isEmpty()){
+        }else if(!socio.getCedula().matches("^[0-9]+$") || socio.getCedula().trim().isEmpty()){
             return "La cédula solo debe contener números, o no debe estar vacío o nulo este campo";
-        }else if(socio.getNombreCompleto().matches(".*\\d.*") || socio.getNombreCompleto() == null || socio.getNombreCompleto().trim().isEmpty()){
+        }else if(socio.getNombreCompleto().matches(".*\\d.*") || socio.getNombreCompleto().trim().isEmpty()){
             return "El nombre no debe contener números, o no debe estar vacío o nulo este campo";
         }else if(socio.getUsername() == null || socio.getUsername().trim().isEmpty()){
             return "No debe estar vacío o nulo el campo del correo";
@@ -46,6 +42,27 @@ public class UsuarioService {
             authService.register(socio);
             return "Socio creado con éxito";
         }
+    }
+
+    public String updateSocio(Usuario usuario){
+        Optional<Usuario> user = usuarioRepository.findById(usuario.getCedula());
+        if(user.isPresent()){
+            user.get().setNombreCompleto(usuario.getNombreCompleto());
+            user.get().setCedula(usuario.getCedula());
+            user.get().setParqueaderos(usuario.getParqueaderos());
+            user.get().setUsername(usuario.getUsername());
+            user.get().setPassword(usuario.getPassword());
+            user.get().setRol(usuario.getRol());
+
+            return "Socio actualizado con éxito";
+        }else {
+            return "Error al actualizar este usuario";
+        }
+    }
+
+
+    public void deleteSocio(String cedula){
+        usuarioRepository.deleteById(cedula);
     }
 
     public List<Usuario> listUsuarios(){

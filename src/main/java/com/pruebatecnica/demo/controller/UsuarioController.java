@@ -21,22 +21,42 @@ public class UsuarioController {
 
     Map<String, Object> response = new HashMap<>();
 
-    @GetMapping("/{cedula}")
-    public ResponseEntity<?> getUsuario(@PathVariable String cedula){
-        return ResponseEntity.ok(usuarioService.usuarioRepository.findById(cedula));
+    @GetMapping(value = "get")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SOCIO')")
+    public ResponseEntity<?> getUsuario(@RequestBody String cedula){
+        return ResponseEntity.ok(usuarioService.getUsuario(cedula));
     }
 
     @PostMapping(value = "register")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> registrarSocio(@RequestBody RegisterSocioRequest socio) {
+    public ResponseEntity<?> createSocio(@RequestBody RegisterSocioRequest socio) {
         response.clear();
-        String mensaje = usuarioService.crearSocio(socio);
+        String mensaje = usuarioService.createSocio(socio);
         response.put("mensaje", mensaje);
         if(mensaje.startsWith("Socio")){
             return ResponseEntity.ok(response);
         }else{
             return ResponseEntity.badRequest().body(response);
         }
+    }
+
+    @PutMapping(value = "update")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SOCIO')")
+    public ResponseEntity<?> updateSocio(@RequestBody Usuario usuario){
+        response.clear();
+        String mensaje = usuarioService.updateSocio(usuario);
+        response.put("mensaje", mensaje);
+        if(mensaje.startsWith("Socio")){
+            return ResponseEntity.ok(response);
+        }else{
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @DeleteMapping()
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteSocio(@RequestBody String cedula){
+        usuarioService.deleteSocio(cedula);
     }
 
     @GetMapping(value = "list")
