@@ -1,4 +1,4 @@
-package com.pruebatecnica.demo.jwt;
+package com.pruebatecnica.demo.config.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -43,6 +43,10 @@ public class JwtService {
 
     public String getUsernameFromToken(String token) {
         return getClaim(token, Claims::getSubject);
+    }
+
+    public Date getIssuedFromToken(String token){
+        return getClaim(token, Claims::getIssuedAt);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {

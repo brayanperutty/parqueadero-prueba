@@ -48,6 +48,9 @@ public class Usuario implements UserDetails{
     )
     private Set<Parqueadero> parqueaderos = new HashSet<>();
 
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Token> tokens = new HashSet<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of((new SimpleGrantedAuthority("ROLE_" + rol.getRol())));

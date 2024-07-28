@@ -17,7 +17,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterSocioRequest socio) {
-        return ResponseEntity.ok(authService.register(socio));
+    public void register(@RequestBody RegisterSocioRequest socio) {
+        authService.register(socio);
     }
 }
