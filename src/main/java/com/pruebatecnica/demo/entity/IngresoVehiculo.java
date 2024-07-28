@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,9 +33,7 @@ public class IngresoVehiculo {
     @JoinColumn(name = "placa_vehiculo", nullable = false)
     private Vehiculo vehiculo;
 
-    @Column(name = "fecha_ingreso", nullable = false)
-    private String fechaIngreso;
+    @Column(name = "fecha_hora_ingreso", nullable = false)
+    private LocalDateTime fechaHoraIngreso;
 
-    @Column(name = "hora_ingreso", nullable = false)
-    private String horaIngreso;
 }

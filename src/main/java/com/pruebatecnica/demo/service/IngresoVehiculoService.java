@@ -3,18 +3,14 @@ package com.pruebatecnica.demo.service;
 import com.pruebatecnica.demo.auth.RegisterIngresoRequest;
 import com.pruebatecnica.demo.entity.IngresoVehiculo;
 import com.pruebatecnica.demo.entity.Parqueadero;
-import com.pruebatecnica.demo.entity.TipoVehiculo;
 import com.pruebatecnica.demo.entity.Vehiculo;
 import com.pruebatecnica.demo.repository.IngresoVehiculoRepository;
 import com.pruebatecnica.demo.repository.ParqueaderoRepository;
-import com.pruebatecnica.demo.repository.TipoVehiculoRepository;
 import com.pruebatecnica.demo.repository.VehiculoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -53,19 +49,12 @@ public class IngresoVehiculoService {
             Optional<Vehiculo> vehiculo = vehiculoRepository.findById(registerIngresoRequest.getPlacaVehiculo());
             Optional<Parqueadero> parqueadero = parqueaderoRepository.findById(registerIngresoRequest.getIdParqueadero());
 
-            LocalDate fechaActual = LocalDate.now();
-            DateTimeFormatter formatterFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String fechaFormateada = fechaActual.format(formatterFecha);
-
-            LocalTime horaActual = LocalTime.now();
-            DateTimeFormatter formatterHora = DateTimeFormatter.ofPattern("HH:mm:ss");
-            String horaFormateada = horaActual.format(formatterHora);
+            LocalDateTime fechaIngreso = LocalDateTime.now();
 
             IngresoVehiculo ingreso = IngresoVehiculo.builder()
                     .vehiculo(vehiculo.get())
                     .parqueadero(parqueadero.get())
-                    .fechaIngreso(fechaFormateada)
-                    .horaIngreso(horaFormateada)
+                    .fechaHoraIngreso(fechaIngreso)
                     .build();
 
             ingresoVehiculoRepository.save(ingreso);

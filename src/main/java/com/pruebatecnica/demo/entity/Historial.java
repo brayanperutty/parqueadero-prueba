@@ -1,13 +1,20 @@
 package com.pruebatecnica.demo.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @Table(name = "historial")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Historial {
 
     @Id
@@ -23,20 +30,12 @@ public class Historial {
     @JoinColumn(name = "placa_vehiculo", nullable = false)
     private Vehiculo vehiculo;
 
-    @Column(name = "fecha_salida", nullable = false)
-    private String fechaSalida;
+    @Column(name = "fecha_hora_salida", nullable = false)
+    private LocalDateTime fechaHoraSalida;
 
-    @Column(name = "hora_salida", nullable = false)
-    private String horaSalida;
-
-    @Column(name = "hora_ingreso", nullable = false)
-    private String horaIngreso;
-
-    @Column(name = "fecha_ingreso", nullable = false)
-    private String fechaIngreso;
+    @Column(name = "fecha_hora_ingreso", nullable = false)
+    private LocalDateTime fechaHoraIngreso;
 
     @Column(nullable = false)
-    private Integer cobro;
-
-    public Historial (){}
+    private Long cobro;
 }
