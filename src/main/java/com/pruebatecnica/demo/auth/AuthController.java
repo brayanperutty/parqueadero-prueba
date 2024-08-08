@@ -1,6 +1,6 @@
 package com.pruebatecnica.demo.auth;
 
-import com.pruebatecnica.demo.dto.UsuarioCreateDTO;
+import com.pruebatecnica.demo.dto.request.UsuarioCreateDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

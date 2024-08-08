@@ -1,22 +1,18 @@
 package com.pruebatecnica.demo.service;
 
 import com.pruebatecnica.demo.auth.AuthService;
-import com.pruebatecnica.demo.dto.ParqueaderoUsuarioDTO;
-import com.pruebatecnica.demo.dto.UsuarioCreateDTO;
+import com.pruebatecnica.demo.dto.request.ParqueaderoUsuarioDTO;
+import com.pruebatecnica.demo.dto.request.UsuarioCreateDTO;
 import com.pruebatecnica.demo.entity.Parqueadero;
 import com.pruebatecnica.demo.entity.Usuario;
+import com.pruebatecnica.demo.repository.IngresoVehiculoRepository;
 import com.pruebatecnica.demo.repository.ParqueaderoRepository;
-import com.pruebatecnica.demo.repository.RolRepository;
 import com.pruebatecnica.demo.repository.UsuarioRepository;
-import com.pruebatecnica.demo.responses.usuario.UsuarioCreateResponse;
-import com.pruebatecnica.demo.responses.usuario.UsuarioErrorResponses;
-import com.pruebatecnica.demo.responses.usuario.UsuarioParqueaderoResponse;
-import com.pruebatecnica.demo.responses.usuario.UsuarioUpdateResponse;
+import com.pruebatecnica.demo.responses.usuario.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -24,13 +20,14 @@ public class UsuarioService {
 
     public final UsuarioRepository usuarioRepository;
     private final ParqueaderoRepository parqueaderoRepository;
-    private final RolRepository rolRepository;
+    private final IngresoVehiculoRepository ingresoVehiculoRepository;
     private final AuthService authService;
 
     private final UsuarioErrorResponses usuarioErrorResponses;
     private final UsuarioCreateResponse usuarioCreateResponse;
     private final UsuarioUpdateResponse usuarioUpdateResponse;
-    private final UsuarioParqueaderoResponse usuarioParqueaderoResponse;
+    private final UsuarioParqueaderoVinculacionResponse usuarioParqueaderoVinculacionResponse;
+    private final UsuarioParqueaderoDesvinculacionResponse usuarioParqueaderoDesvinculacionResponse;
 
     public Usuario getUsuario(Integer id){
         return usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException(usuarioErrorResponses.getUsuarioNoEncontrado()));
@@ -45,26 +42,20 @@ public class UsuarioService {
 
            throw new IllegalArgumentException(usuarioErrorResponses.getCorreoRegistrado());
 
-        }else if(!rolRepository.validateRol(usuarioCreateDTO.getRol())){
-
-           throw new IllegalArgumentException(usuarioErrorResponses.getRolNoEncontrado());
-       }else{
+        }else{
             authService.register(usuarioCreateDTO);
             return usuarioCreateResponse;
         }
     }
 
-    public UsuarioUpdateResponse updateSocio(Usuario usuario){
-        Usuario user = usuarioRepository.findById(usuario.getId()).orElseThrow(() -> new RuntimeException(usuarioErrorResponses.getUsuarioNoEncontrado()));
+    public UsuarioUpdateResponse updateSocio(UsuarioCreateDTO usuarioCreateDTO){
+        Usuario user = usuarioRepository.findByUsername(usuarioCreateDTO.getUsername()).orElseThrow(() -> new RuntimeException(usuarioErrorResponses.getUsuarioNoEncontrado()));
 
-            user.setNombreCompleto(usuario.getNombreCompleto());
-            user.setCedula(usuario.getCedula());
-            user.setParqueaderos(usuario.getParqueaderos());
-            user.setUsername(usuario.getUsername());
-            user.setPassword(usuario.getPassword());
-            user.setRol(usuario.getRol());
+            user.setNombreCompleto(usuarioCreateDTO.getNombreCompleto());
+            user.setCedula(usuarioCreateDTO.getCedula());
+            user.setUsername(usuarioCreateDTO.getUsername());
+            user.setPassword(usuarioCreateDTO.getPassword());
             usuarioRepository.save(user);
-
             return usuarioUpdateResponse;
     }
 
@@ -76,11 +67,11 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public UsuarioParqueaderoResponse asignarParqueadero(Integer id, Set<ParqueaderoUsuarioDTO> parqueaderos){
+    public UsuarioParqueaderoVinculacionResponse asignarParqueadero(Integer id, ParqueaderoUsuarioDTO parqueaderoUsuarioDTO){
         Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException(usuarioErrorResponses.getUsuarioNoEncontrado()));
 
-        parqueaderos.forEach(p -> {
-            Parqueadero parqueadero = parqueaderoRepository.findById(p.getId()).orElseThrow(() -> new RuntimeException("Parqueadero " + p.getId() +
+        parqueaderoUsuarioDTO.getId().forEach(parqueaderoId -> {
+            Parqueadero parqueadero = parqueaderoRepository.findById(parqueaderoId).orElseThrow(() -> new RuntimeException("Parqueadero " + parqueaderoId +
                     "no encontrado"));
 
             usuario.getParqueaderos().add(parqueadero);
@@ -89,14 +80,26 @@ public class UsuarioService {
             usuarioRepository.save(usuario);
             parqueaderoRepository.save(parqueadero);
         });
-
-            return usuarioParqueaderoResponse;
+            return usuarioParqueaderoVinculacionResponse;
     }
 
-    public Set<Parqueadero> listParqueaderoBySocio(Integer id){
+    public UsuarioParqueaderoDesvinculacionResponse desvincularParqueadero(Integer id, ParqueaderoUsuarioDTO parqueaderoUsuarioDTO){
+
         Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException(usuarioErrorResponses.getUsuarioNoEncontrado()));
 
-        return usuario.getParqueaderos();
-    }
+        parqueaderoUsuarioDTO.getId().forEach(parqueaderoId -> {
+            if(ingresoVehiculoRepository.validateSocioWithParqueadero(parqueaderoId, usuario.getId())){
+                Parqueadero parqueadero = parqueaderoRepository.findById(parqueaderoId).orElseThrow(() -> new RuntimeException("Parqueadero " + parqueaderoId +
+                        "no encontrado"));
+                usuario.getParqueaderos().remove(parqueadero);
+                parqueadero.getSocios().remove(usuario);
 
+                usuarioRepository.save(usuario);
+                parqueaderoRepository.save(parqueadero);
+            }else{
+                throw new IllegalArgumentException("Este socio no corresponde al parqueadero " + parqueaderoId);
+            }
+        });
+        return usuarioParqueaderoDesvinculacionResponse;
+    }
 }

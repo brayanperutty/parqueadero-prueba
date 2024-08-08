@@ -1,14 +1,12 @@
 package com.pruebatecnica.demo.auth;
 
-import com.pruebatecnica.demo.dto.UsuarioCreateDTO;
+import com.pruebatecnica.demo.dto.request.UsuarioCreateDTO;
 import com.pruebatecnica.demo.entity.Rol;
 import com.pruebatecnica.demo.entity.Token;
 import com.pruebatecnica.demo.entity.Usuario;
 import com.pruebatecnica.demo.config.jwt.JwtService;
-import com.pruebatecnica.demo.repository.RolRepository;
 import com.pruebatecnica.demo.repository.TokenRepository;
 import com.pruebatecnica.demo.repository.UsuarioRepository;
-import com.pruebatecnica.demo.responses.usuario.UsuarioErrorResponses;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,10 +26,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final RolRepository rolRepository;
     private final TokenRepository tokenRepository;
-
-    private final UsuarioErrorResponses usuarioErrorResponses;
 
     @Transactional
     public AuthResponse login(LoginUserRequest request) {
@@ -45,7 +40,6 @@ public class AuthService {
         return AuthResponse.builder()
                 .token(token)
                 .nombreUsuario(user.getNombreCompleto())
-                .cedula(user.getCedula())
                 .build();
     }
 
@@ -65,7 +59,7 @@ public class AuthService {
 
     public void register(UsuarioCreateDTO usuarioCreateDTO) {
 
-        Rol rol = rolRepository.findById(usuarioCreateDTO.getRol()).orElseThrow(() -> new RuntimeException(usuarioErrorResponses.getRolNoEncontrado()));
+        Rol rol = new Rol(2, "SOCIO");
         Usuario.UsuarioBuilder builder = Usuario.builder();
         builder.username(usuarioCreateDTO.getUsername());
         builder.password(passwordEncoder.encode(usuarioCreateDTO.getPassword()));

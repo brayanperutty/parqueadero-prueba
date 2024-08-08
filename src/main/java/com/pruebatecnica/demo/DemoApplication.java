@@ -1,9 +1,10 @@
 package com.pruebatecnica.demo;
 
 import com.pruebatecnica.demo.auth.AuthController;
-import com.pruebatecnica.demo.dto.UsuarioCreateDTO;
+import com.pruebatecnica.demo.dto.request.UsuarioCreateDTO;
 import com.pruebatecnica.demo.entity.Rol;
 import com.pruebatecnica.demo.entity.TipoVehiculo;
+import com.pruebatecnica.demo.entity.Usuario;
 import com.pruebatecnica.demo.repository.RolRepository;
 import com.pruebatecnica.demo.repository.TipoVehiculoRepository;
 import com.pruebatecnica.demo.repository.UsuarioRepository;
@@ -64,9 +65,11 @@ public class DemoApplication {
 				administrador.setNombreCompleto("Brayan Alexander Perutty Ramirez");
 				administrador.setUsername("admin@mail.com");
 				administrador.setPassword("admin");
-				administrador.setRol(1);
 
 				authController.register(administrador);
+				Usuario admin = usuarioRepository.findByUsername(administrador.getUsername()).orElseThrow(() -> new RuntimeException("Error al crear el usuario ADMIN"));
+				admin.setRol(new Rol(1, "ADMIN"));
+				usuarioRepository.save(admin);
 			}
 		};
 	}

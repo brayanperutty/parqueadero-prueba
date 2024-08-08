@@ -11,8 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.*;
 
 @Entity
@@ -21,10 +19,7 @@ import java.util.*;
 @Table(name = "usuario", uniqueConstraints = {@UniqueConstraint(columnNames = {"correo"})})
 @AllArgsConstructor
 @NoArgsConstructor
-public class Usuario implements UserDetails, Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1905122041950251207L;
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,10 +36,12 @@ public class Usuario implements UserDetails, Serializable {
     private String username;
 
     @Column(name = "pass", nullable = false)
+    @JsonIgnore
     private String password;
 
     @ManyToOne
     @JoinColumn(name = "id_rol", nullable = false)
+    @JsonIgnore
     private Rol rol;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -53,7 +50,6 @@ public class Usuario implements UserDetails, Serializable {
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "parqueadero_id")
     )
-    @JsonIgnore
     private Set<Parqueadero> parqueaderos = new HashSet<>();
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

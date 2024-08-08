@@ -1,21 +1,21 @@
 package com.pruebatecnica.demo.controller;
 
-import com.pruebatecnica.demo.dto.ParqueaderoUsuarioDTO;
-import com.pruebatecnica.demo.dto.UsuarioCreateDTO;
-import com.pruebatecnica.demo.entity.Parqueadero;
+import com.pruebatecnica.demo.dto.request.ParqueaderoUsuarioDTO;
+import com.pruebatecnica.demo.dto.request.UsuarioCreateDTO;
 import com.pruebatecnica.demo.entity.Usuario;
 import com.pruebatecnica.demo.responses.usuario.UsuarioCreateResponse;
-import com.pruebatecnica.demo.responses.usuario.UsuarioParqueaderoResponse;
+import com.pruebatecnica.demo.responses.usuario.UsuarioParqueaderoDesvinculacionResponse;
+import com.pruebatecnica.demo.responses.usuario.UsuarioParqueaderoVinculacionResponse;
 import com.pruebatecnica.demo.responses.usuario.UsuarioUpdateResponse;
 import com.pruebatecnica.demo.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -40,10 +40,9 @@ public class UsuarioController {
 
     @PutMapping()
     @PreAuthorize("hasAnyRole('ADMIN', 'SOCIO')")
-    public ResponseEntity<UsuarioUpdateResponse> updateSocio(@Valid @RequestBody Usuario usuario){
-        UsuarioUpdateResponse usuarioUpdateResponse = usuarioService.updateSocio(usuario);
-
-        return ResponseEntity.ok(usuarioUpdateResponse);
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioUpdateResponse updateSocio(@Valid @RequestBody UsuarioCreateDTO usuarioCreateDTO){
+        return usuarioService.updateSocio(usuarioCreateDTO);
     }
 
     @DeleteMapping(value = "{id}")
@@ -60,15 +59,15 @@ public class UsuarioController {
 
     @PostMapping(value = "{id}/parqueaderos")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UsuarioParqueaderoResponse> asignarSocioToParqueadero(@PathVariable Integer id, @RequestBody Set<ParqueaderoUsuarioDTO> parqueaderos){
-        UsuarioParqueaderoResponse usuarioParqueaderoResponse = usuarioService.asignarParqueadero(id,parqueaderos);
-        return ResponseEntity.ok(usuarioParqueaderoResponse);
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioParqueaderoVinculacionResponse vincularSocioParqueadero(@PathVariable Integer id, @RequestBody ParqueaderoUsuarioDTO parqueaderos){
+        return usuarioService.asignarParqueadero(id,parqueaderos);
     }
 
-    @GetMapping(value = "{id}/parqueaderos")
-    @PreAuthorize("hasAnyRole('ADMIN', 'SOCIO')")
-    public Set<Parqueadero> listParqueaderosBySocio(@PathVariable Integer id){
-        return usuarioService.listParqueaderoBySocio(id);
+    @PostMapping(value = "{id}/parqueaderos/delete")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioParqueaderoDesvinculacionResponse desvincularSocioParqueadero(@PathVariable Integer id, @RequestBody ParqueaderoUsuarioDTO parqueaderoUsuarioDTO){
+        return usuarioService.desvincularParqueadero(id, parqueaderoUsuarioDTO);
     }
-
 }

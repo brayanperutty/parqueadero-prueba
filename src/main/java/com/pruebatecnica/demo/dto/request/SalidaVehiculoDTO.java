@@ -1,4 +1,4 @@
-package com.pruebatecnica.demo.dto;
+package com.pruebatecnica.demo.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -21,8 +21,4 @@ public class SalidaVehiculoDTO {
     @NotNull(message = "El campo de id del parqueadero no debe ser nulo")
     @Min(value = 1, message = "El id del parqueadero debe contener al menos 1 dígito")
     private Integer idParqueadero;
-
-    @NotNull(message = "El campo de id del socio no debe ser nulo")
-    @Min(value = 1, message = "El id del socio debe contener al menos 1 dígito")
-    private Integer idSocio;
 }

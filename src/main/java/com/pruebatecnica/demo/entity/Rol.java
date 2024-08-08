@@ -6,18 +6,12 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 @Entity
 @Data
 @Table(name = "rol")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Rol implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class Rol {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

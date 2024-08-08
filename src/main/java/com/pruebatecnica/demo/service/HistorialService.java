@@ -1,6 +1,7 @@
 package com.pruebatecnica.demo.service;
 
-import com.pruebatecnica.demo.dto.SalidaVehiculoDTO;
+import com.pruebatecnica.demo.config.jwt.JwtService;
+import com.pruebatecnica.demo.dto.request.SalidaVehiculoDTO;
 import com.pruebatecnica.demo.entity.Historial;
 import com.pruebatecnica.demo.entity.IngresoVehiculo;
 import com.pruebatecnica.demo.entity.Parqueadero;
@@ -32,17 +33,20 @@ public class HistorialService {
     private final SalidaVehiculoErrorResponses salidaVehiculoErrorResponses;
     private final SalidaVehiculoCreateResponse salidaVehiculoCreateResponse;
 
-    public SalidaVehiculoCreateResponse createSalidaVehiculo(SalidaVehiculoDTO salidaVehiculoDTO) throws IllegalArgumentException{
+    private final JwtService jwtService;
 
+    public SalidaVehiculoCreateResponse createSalidaVehiculo(SalidaVehiculoDTO salidaVehiculoDTO) throws IllegalArgumentException{
+        System.out.println("service");
+        Integer idUsuario = jwtService.getIdUsuario();
         if (!ingresoVehiculoRepository.validateRegistroVehiculo(salidaVehiculoDTO.getPlacaVehiculo(), salidaVehiculoDTO.getIdParqueadero())) {
             throw new IllegalArgumentException(salidaVehiculoErrorResponses.getErrorSalida());
-        } else if (!ingresoVehiculoRepository.validateSocioWithParqueadero(salidaVehiculoDTO.getIdSocio(), salidaVehiculoDTO.getIdParqueadero())) {
+        } else if (!ingresoVehiculoRepository.validateSocioWithParqueadero(salidaVehiculoDTO.getIdParqueadero(), idUsuario)) {
             throw new IllegalArgumentException(salidaVehiculoErrorResponses.getParqueaderoError());
         }else{
             Vehiculo v = vehiculoRepository.findById(salidaVehiculoDTO.getPlacaVehiculo()).orElseThrow(() -> new RuntimeException(vehiculoErrorResponses.getNoEncontrado()));
             Parqueadero p = parqueaderoRepository.findById(salidaVehiculoDTO.getIdParqueadero()).orElseThrow(() -> new RuntimeException(parqueaderoErrorResponses.getNoEncontrado()));
 
-            IngresoVehiculo ingresoVehiculo = ingresoVehiculoRepository.findByVehiculo(v);
+            IngresoVehiculo ingresoVehiculo = ingresoVehiculoRepository.findByVehiculo(v).orElseThrow(() -> new RuntimeException(vehiculoErrorResponses.getNoEncontrado()));
 
             LocalDateTime fechaHoraSalida = LocalDateTime.now();
 
@@ -57,7 +61,7 @@ public class HistorialService {
                     cobroFinal = (tiempo.toHours() + 1) * p.getCostoHoraCarro();
                 }
             }
-
+            System.out.println(ingresoVehiculo);
             Historial historial = Historial.builder()
                     .vehiculo(ingresoVehiculo.getVehiculo())
                     .parqueadero(ingresoVehiculo.getParqueadero())

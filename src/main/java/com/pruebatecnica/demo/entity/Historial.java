@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Historial {
+public class Historial{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +24,11 @@ public class Historial {
 
     @ManyToOne
     @JoinColumn(name = "id_parqueadero", nullable = false)
-    private Parqueadero parqueadero;
+    private  Parqueadero parqueadero;
 
     @ManyToOne
     @JoinColumn(name = "placa_vehiculo", nullable = false)
-    private Vehiculo vehiculo;
+    private  Vehiculo vehiculo;
 
     @Column(name = "fecha_hora_salida", nullable = false)
     private LocalDateTime fechaHoraSalida;

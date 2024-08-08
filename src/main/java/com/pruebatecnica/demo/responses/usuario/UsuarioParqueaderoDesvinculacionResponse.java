@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-public class UsuarioParqueaderoResponse {
+public class UsuarioParqueaderoDesvinculacionResponse {
 
-    private String mensaje = "Socio asignado exitosamente";
+    private String mensaje = "Socio desvinculado exitosamente";
 }

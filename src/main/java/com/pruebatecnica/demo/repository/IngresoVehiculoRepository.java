@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface IngresoVehiculoRepository extends JpaRepository<IngresoVehiculo, Integer> {
 
@@ -21,8 +23,8 @@ public interface IngresoVehiculoRepository extends JpaRepository<IngresoVehiculo
             "JOIN p.socios s " +
             "WHERE p.idParqueadero = :idParqueadero " +
             "AND s.id = :idSocio")
-    boolean validateSocioWithParqueadero(Integer idSocio, Integer idParqueadero);
+    boolean validateSocioWithParqueadero(Integer idParqueadero, Integer idSocio);
 
     @Query(value = "SELECT iv FROM IngresoVehiculo iv WHERE iv.vehiculo = :vehiculo")
-    IngresoVehiculo findByVehiculo(Vehiculo vehiculo);
+    Optional<IngresoVehiculo> findByVehiculo(Vehiculo vehiculo);
 }

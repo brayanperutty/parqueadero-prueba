@@ -29,5 +29,5 @@ public class TipoVehiculo {
 
     @OneToMany(mappedBy = "tipo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Vehiculo> vehiculos = new HashSet<>();
+    private  Set<Vehiculo> vehiculos = new HashSet<>();
 }

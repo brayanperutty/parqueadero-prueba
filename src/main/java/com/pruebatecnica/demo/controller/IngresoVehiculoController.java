@@ -1,15 +1,12 @@
 package com.pruebatecnica.demo.controller;
 
-import com.pruebatecnica.demo.dto.IngresoVehiculoDTO;
+import com.pruebatecnica.demo.dto.request.IngresoVehiculoDTO;
 import com.pruebatecnica.demo.responses.ingresovehiculo.IngresoVehiculoCreateResponse;
 import com.pruebatecnica.demo.service.IngresoVehiculoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/ingresos")
@@ -20,8 +17,8 @@ public class IngresoVehiculoController {
 
     @PostMapping()
     @PreAuthorize("hasRole('SOCIO')")
-    public ResponseEntity<IngresoVehiculoCreateResponse> createIngresoVehiculo(@RequestBody IngresoVehiculoDTO ingresoVehiculoDTO){
-        IngresoVehiculoCreateResponse ingresoVehiculoCreateResponse = ingresoVehiculoService.createIngresoVehiculo(ingresoVehiculoDTO);
-        return ResponseEntity.ok(ingresoVehiculoCreateResponse);
+    @ResponseStatus(HttpStatus.OK)
+    public IngresoVehiculoCreateResponse createIngresoVehiculo(@RequestBody IngresoVehiculoDTO ingresoVehiculoDTO){
+        return ingresoVehiculoService.createIngresoVehiculo(ingresoVehiculoDTO);
     }
 }

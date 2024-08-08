@@ -1,4 +1,4 @@
-package com.pruebatecnica.demo.dto;
+package com.pruebatecnica.demo.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

@@ -7,6 +7,8 @@ import com.pruebatecnica.demo.responses.parqueadero.ParqueaderoErrorResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ParqueaderoService {
@@ -43,6 +45,10 @@ public class ParqueaderoService {
 
     public void deleteParqueadero(Integer idParqueadero){
         parqueaderoRepository.deleteById(idParqueadero);
+    }
+
+    public List<Parqueadero> listParqueadero(){
+       return parqueaderoRepository.findAll();
     }
 
 }

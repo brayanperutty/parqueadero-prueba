@@ -1,9 +1,12 @@
 package com.pruebatecnica.demo.repository;
 
 
+import com.pruebatecnica.demo.dto.responses.UsuarioResponseDTO;
 import com.pruebatecnica.demo.entity.Usuario;
+import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.lang.NonNullApi;
 import org.springframework.stereotype.Repository;
 
 

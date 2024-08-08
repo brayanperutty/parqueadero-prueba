@@ -1,4 +1,4 @@
-package com.pruebatecnica.demo.dto;
+package com.pruebatecnica.demo.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -35,8 +35,4 @@ public class UsuarioCreateDTO {
     @NotBlank(message = "El campo password no debe estar vacío")
     @Size(max = 100, message = "Password demasiado extensa")
     private String password;
-
-    @NotNull(message = "El campo rol no debe ser nulo")
-    @Min(value = 1, message = "El campo rol debe al menos tener 1 dígito")
-    private Integer rol;
 }
